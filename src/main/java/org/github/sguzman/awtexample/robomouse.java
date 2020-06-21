@@ -12,6 +12,11 @@ class robomouse extends Frame implements ActionListener {
 
     // textField
     static TextField x, y;
+    static TextField locationX;
+    static TextField locationY;
+
+    static TextField locationRelativeX;
+    static TextField locationRelativeY;
 
     // default constructor
     robomouse()
@@ -34,6 +39,12 @@ class robomouse extends Frame implements ActionListener {
         x = new TextField(7);
         y = new TextField(7);
 
+        locationX = new TextField(4);
+        locationY = new TextField(4);
+
+        locationRelativeX = new TextField(4);
+        locationRelativeY = new TextField(4);
+
         // create a button
         Button b = new Button("OK");
 
@@ -48,11 +59,34 @@ class robomouse extends Frame implements ActionListener {
         p.add(y);
         p.add(b);
 
+        p.add(locationX);
+        p.add(locationY);
+
+        p.add(locationRelativeX);
+        p.add(locationRelativeY);
+
         f.add(p);
+
+        Runnable task = () -> {
+            while (true) {
+                try {
+                    Point pp = MouseInfo.getPointerInfo().getLocation();
+                    locationX.setText(pp.x + "");
+                    locationY.setText(pp.y + "");
+
+                    Point ppp = f.getMousePosition();
+                    if (ppp != null) {
+                        locationRelativeX.setText(ppp.x + "");
+                        locationRelativeY.setText(ppp.y + "");
+                    }
+                } catch (HeadlessException ignored) {
+                }
+            }
+        };
+        new Thread(task).start();
 
         // setsize of frame
         f.setSize(300, 300);
-
         f.show();
     }
 
